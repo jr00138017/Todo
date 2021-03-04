@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from todolist import views
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -26,6 +28,7 @@ urlpatterns = [
 
 
     # Todos
-    path('current/', views.currenttodos , name='currenttodos'),
     path('', views.home , name='home'),
+    path('current/', views.currenttodos , name='currenttodos'),
+    path('create/', views.createtodo , name='createtodo'),
 ]

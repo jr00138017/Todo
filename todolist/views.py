@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm , AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout , authenticate
+from .form import TodoForm
 
 
 def home(request):
@@ -51,3 +52,17 @@ def loginuser(request):
 
 def currenttodos(request):
     return render(request, 'todo/currenttodos.html')
+
+
+def createtodo(request):
+    if request.method == 'GET':
+        return render(request, 'todo/createtodo.html', {'form': TodoForm()})
+    else:
+        try:
+            form = TodoForm(request.POST)
+            newtodoform = form.save(commit=False)
+            newtodoform.user = request.user
+            newtodoform.save()
+            return redirect('currenttodos')
+        except :
+            return render(request, 'todo/createtodo.html', {'form': TodoForm(), 'error': 'Bad data, Try again.'})
