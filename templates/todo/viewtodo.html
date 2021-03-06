@@ -1,8 +1,13 @@
 {% extends 'todo/base.html' %}
 {% block content %}
-    {{  todo.title }}
+    {{  error }}
 
 <h1>viwetodo</h1>
 
+    <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">save</button>
+    </form>
 
 {% endblock %}
