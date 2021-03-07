@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # Create your views here.
@@ -67,22 +69,37 @@ def createtodo(request):
 
 def currenttodos(request):
     # 只顯示當前使用者的todo
-    #todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+    # todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
     todos = Todo.objects.filter(user=request.user)
 
     return render(request, 'todo/currenttodos.html', {'todos': todos})
 
 
 def viewtodo(request, todo_pk):
-    todo = get_object_or_404(Todo, pk=todo_pk)
+    todo = get_object_or_404(Todo, pk=todo_pk , user=request.user)
     if request.method == 'GET':
         form = TodoForm(instance=todo)
         return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form})
     else:
         try:
-            form = TodoForm(request.POST,instance=todo)
+            form = TodoForm(request.POST, instance=todo)
             form.save()
             return redirect('currenttodos')
         except ValueError:
-            return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form, 'error':"bad info"})
+            return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form, 'error': "bad info"})
+
+
+def completetodo(request , todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk , user=request.user)
+    if request.method == 'POST':
+        todo.datecompleted = timezone.now()
+        todo.save()
+        return redirect('currenttodos')
+
+
+def deletetodo(request , todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == 'POST':
+        todo.delete()
+        return redirect('currenttodos')
 
