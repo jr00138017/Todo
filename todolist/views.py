@@ -1,5 +1,3 @@
-from django.utils import timezone
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # Create your views here.
@@ -8,6 +6,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from .form import TodoForm
 from .models import Todo
+from django.utils import timezone
 
 
 def home(request):
@@ -69,14 +68,19 @@ def createtodo(request):
 
 def currenttodos(request):
     # 只顯示當前使用者的todo
-    # todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
-    todos = Todo.objects.filter(user=request.user)
+    todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+    #todos = Todo.objects.filter(user=request.user)
 
     return render(request, 'todo/currenttodos.html', {'todos': todos})
 
+def completedtodos(request):
+    todos = Todo.objects.filter(user=request.user,  datecompleted__isnull=False).order_by('-datecompleted')
+
+    return render(request, 'todo/completedtodos.html', {'todos': todos})
+
 
 def viewtodo(request, todo_pk):
-    todo = get_object_or_404(Todo, pk=todo_pk , user=request.user)
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'GET':
         form = TodoForm(instance=todo)
         return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form})
@@ -89,15 +93,15 @@ def viewtodo(request, todo_pk):
             return render(request, 'todo/viewtodo.html', {'todo': todo, 'form': form, 'error': "bad info"})
 
 
-def completetodo(request , todo_pk):
-    todo = get_object_or_404(Todo, pk=todo_pk , user=request.user)
+def completetodo(request, todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'POST':
         todo.datecompleted = timezone.now()
         todo.save()
         return redirect('currenttodos')
 
 
-def deletetodo(request , todo_pk):
+def deletetodo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'POST':
         todo.delete()
