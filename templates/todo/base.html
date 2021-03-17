@@ -22,51 +22,72 @@
     <title>Todo</title>
 
     <style>
-
+        .jumbotron{
+            background-color:gray;
+        }
+        .navbar-custom
+        {
+            background-color:#CAF4C5;
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-text {
+            color: black;
+        }
     </style>
 </head>
 
 
-<nav class="navbar navbar-expand-sm bg-light navbar-light ">
-    <div class="collapse navbar-collapse" id="navbarNav">
-        {% if user.is_authenticated %}
+<nav class="navbar navbar-expand-sm  navbar-custom ">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'todo/logo.png' %}" width="30" height="30" class="d-inline-block align-top">
+            <span>Todo</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item {{ current }}">
-                    <a class="nav-link" href="{% url 'currenttodos' %}">Current</a>
-                </li>
-                <li class="nav-item {{ completed }}">
-                    <a class="nav-link" href="{% url 'completedtodos' %}">Completed</a>
-                </li>
-                <li class="nav-item {{ create }}">
-                    <a class="nav-link" href="{% url 'createtodo' %}">Create</a>
-                </li>
 
-            </ul>
-
-        {% endif %}
-
-        <ul class="navbar-nav ml-auto">
+        <div class="collapse navbar-collapse" id="navbarNav">
             {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a href="#" onclick="$('#signOutBtn').click()" class="nav-link">Logout</a>
-                    <form style='display: none;' method="POST" action="{% url 'logoutuser' %}">
-                        {% csrf_token %}
-                        <button id="signOutBtn" type="submit">Logout</button>
-                    </form>
-                </li>
-            {% else %}
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'signupuser' %}">Sign Up</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'loginuser' %}">Login</a>
-                </li>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item {{ current }}">
+                        <a class="nav-link" href="{% url 'currenttodos' %}">Current</a>
+                    </li>
+                    <li class="nav-item {{ completed }}">
+                        <a class="nav-link" href="{% url 'completedtodos' %}">Completed</a>
+                    </li>
+                    <li class="nav-item {{ create }}">
+                        <a class="nav-link" href="{% url 'createtodo' %}">Create</a>
+                    </li>
+
                 </ul>
-            {% endif %}
-    </div>
-</nav>
-    {% block content %}
 
-    {% endblock %}
+            {% endif %}
+
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="#" onclick="$('#signOutBtn').click()" class="nav-link">Logout</a>
+                        <form style='display: none;' method="POST" action="{% url 'logoutuser' %}">
+                            {% csrf_token %}
+                            <button id="signOutBtn" type="submit">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signupuser' %}">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'loginuser' %}">Login</a>
+                    </li>
+                    </ul>
+                {% endif %}
+        </div>
+</nav>
+{% block content %}
+
+{% endblock %}

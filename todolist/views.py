@@ -45,11 +45,12 @@ def loginuser(request):
         return render(request, 'todo/loginuser.html', {'form': AuthenticationForm()})
     else:
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-        if user == None:
-            return render(request, 'todo/login.html', {'form': AuthenticationForm(), 'error': 'User is not exists'})
-        else:
+        if user is not None:
             login(request, user)
             return redirect('currenttodos')
+        else:
+            return render(request, 'todo/loginuser.html', {'form': AuthenticationForm(), 'error': 'User is not exists'})
+
 
 @login_required()
 def createtodo(request):
