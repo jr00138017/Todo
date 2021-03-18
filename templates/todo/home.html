@@ -1,12 +1,20 @@
 {% extends 'todo/base.html' %}
 
 {% block content %}
-    <div class="container">
-        <div class="jumbotron jumbotron－fluid  text-white " background-color=#C2EB1E>
-            <h1>Bootstrap Tutorial</h1>
-            <p>Bootstrap is the most popular HTML, CSS...</p>
-        </div>
+
+
+    <div class="jumbotron jumbotron－fluid  text-black ">
+        <h1>Todo List</h1>
+        <b></b>
+        <p>Let's try to create your own todo list!</p>
+        {% if user.is_authenticated %}
+            <a role="button" class="btn btn-success btn-lg" href="{% url 'createtodo' %}">Start</a>
+        {% else %}
+            <a role="button" class="btn btn-success btn-lg" href="{% url 'signupuser' %}">Start</a>
+        {% endif %}
+
     </div>
+
 
 
 {% endblock %}

@@ -10,6 +10,12 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 def home(request):
+    # if request.session.test_cookie_worked():
+    #     request.session.delete_test_cookie()
+    #     message = "cookie support"
+    # else:
+    #     message = "cookie not support"
+    # request.session.set_test_cookie()
     return render(request, 'todo/home.html')
 
 
