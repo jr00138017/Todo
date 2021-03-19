@@ -76,9 +76,10 @@ def createtodo(request):
 def currenttodos(request):
     # 只顯示當前使用者的todo
     todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+    importanttodo = Todo.objects.filter(user=request.user , important=True ,  datecompleted__isnull=True).count()
     #todos = Todo.objects.filter(user=request.user)
 
-    return render(request, 'todo/currenttodos.html', {'todos': todos})
+    return render(request, 'todo/currenttodos.html', {'todos': todos , 'important': importanttodo})
 
 @login_required()
 def completedtodos(request):
